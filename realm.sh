@@ -16,6 +16,7 @@ init_env() {
 
 # 配置文件路径
 CONFIG_PATH="/root/.realm/config.toml"
+PANEL_CONFIG_PATH="/root/realm/web/config.toml" # 新增：面板配置文件路径
 
 # 处理命令行参数
 while getopts "l:r:" opt; do
