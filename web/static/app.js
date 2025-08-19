@@ -1,23 +1,23 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // ---- 主题切换功能修正版 -----
+
     const themeToggleButton = document.getElementById('themeToggleButton');
     const body = document.body;
     const themeIcon = document.getElementById('themeIcon'); // 获取图标元素
     const THEME_STORAGE_KEY = 'realmTheme';
-    // ---- 新增：定义SVG图标 ----
+    
     const SVG_ICON_SUN = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
     const SVG_ICON_MOON = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
-    // 函数：根据当前主题更新图标
+    
     function updateThemeIcon() {
         if (body.classList.contains('dark-theme')) {
-        // 当前是深色主题，显示太阳图标 (提示可切换到浅色)
+        
             themeIcon.innerHTML = SVG_ICON_SUN; 
         } else {
-        // 当前是浅色主题，显示月亮图标 (提示可切换到深色)
+        
             themeIcon.innerHTML = SVG_ICON_MOON;
         }
     }
-    // 初始化主题：优先用户保存的，其次系统偏好，最后默认浅色
+    
     const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
     if (savedTheme === 'dark-theme') {
         body.classList.add('dark-theme');
@@ -28,9 +28,9 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         body.classList.remove('dark-theme');
     }
-    // 初始化时调用一次，确保页面加载时图标正确
+    
     updateThemeIcon();
-    // 唯一的事件监听器
+    
     themeToggleButton.addEventListener('click', () => {
         // 切换 body 的 class
         body.classList.toggle('dark-theme');
@@ -41,10 +41,9 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem(THEME_STORAGE_KEY, 'light-theme');
         }
         
-        // 每次点击后都更新图标
         updateThemeIcon();
     });
-    // ---- 主题切换功能修正版结束 ------
+    
     const outputDiv = document.getElementById('output');
     const startButton = document.getElementById('startButton');
     const stopButton = document.getElementById('stopButton');
