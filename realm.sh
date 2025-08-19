@@ -6,7 +6,7 @@ green="\033[0;32m"
 plain="\033[0m"
 
 # 脚本版本
-sh_ver="2.1"
+sh_ver="1.0"
 
 # 初始化环境目录
 init_env() {
@@ -95,7 +95,7 @@ check_panel_service_status() {
 # 更新脚本
 Update_Shell() {
     echo -e "当前脚本版本为 [ ${sh_ver} ]，开始检测最新版本..."
-    sh_new_ver=$(wget --no-check-certificate -qO- "https://raw.githubusercontent.com/wcwq98/realm/main/realm.sh" | grep 'sh_ver="' | awk -F "=" '{print $NF}' | sed 's/\"//g' | head -1)
+    sh_new_ver=$(wget --no-check-certificate -qO- "https://raw.githubusercontent.com/Polaris-DP/realm/main/realm.sh" | grep 'sh_ver="' | awk -F "=" '{print $NF}' | sed 's/\"//g' | head -1)
     if [[ -z ${sh_new_ver} ]]; then
         echo -e "${red}检测最新版本失败！请检查网络或稍后再试。${plain}"
         return 1
@@ -110,7 +110,7 @@ Update_Shell() {
     read -p "(默认: y): " yn
     yn=${yn:-y}
     if [[ ${yn} =~ ^[Yy]$ ]]; then
-        wget -N --no-check-certificate https://raw.githubusercontent.com/wcwq98/realm/main/realm.sh -O realm.sh
+        wget -N --no-check-certificate https://raw.githubusercontent.com/Polaris-DP/realm/main/realm.sh -O realm.sh
         if [[ $? -ne 0 ]]; then
             echo -e "${red}下载脚本失败，请检查网络连接！${plain}"
             return 1
@@ -147,25 +147,24 @@ check_dependencies() {
 
 # 显示菜单的函数
 show_menu() {
-    clear
     update_realm_status
     check_realm_service_status
     update_panel_status
     check_panel_service_status
     echo "欢迎使用realm一键转发脚本"
     echo "================="
-    echo "1. 部署环境"
-    echo "2. 添加转发"
-    echo "3. 添加端口段转发"
-    echo "4. 删除转发"
-    echo "5. 启动服务"
-    echo "6. 停止服务"
-    echo "7. 重启服务"
-    echo "8. 检测更新"
-    echo "9. 一键卸载"
+    echo " 1. 部署环境"
+    echo " 2. 添加转发"
+    echo " 3. 添加端口段转发"
+    echo " 4. 删除转发"
+    echo " 5. 启动服务"
+    echo " 6. 停止服务"
+    echo " 7. 重启服务"
+    echo " 8. 检测更新"
+    echo " 9. 一键卸载"
     echo "10. 更新脚本"
     echo "11. 面板管理"
-    echo "0. 退出脚本"
+    echo " 0. 退出脚本"
     echo "================="
     echo -e "realm 状态：${realm_status_color}${realm_status}${plain}"
     echo -e "realm 转发状态：${realm_service_status_color}${realm_service_status}${plain}"
@@ -229,7 +228,7 @@ use_udp = true #是否开启udp转发
 #参考模板
 # [[endpoints]]
 # listen = "0.0.0.0:本地端口"
-# remote = "落地鸡ip:目标端口"
+# remote = "落地机ip:目标端口"
 
 [[endpoints]]
 listen = "0.0.0.0:1234"
@@ -337,9 +336,9 @@ delete_forward() {
 # 添加转发规则
 add_forward() {
     while true; do
-        read -e -p "请输入落地鸡的IP: " ip
-        read -e -p "请输入本地中转鸡的端口（port1）: " port1
-        read -e -p "请输入落地鸡端口（port2）: " port2
+        read -e -p "请输入落地机的IP: " ip
+        read -e -p "请输入本地中转机的端口（port1）: " port1
+        read -e -p "请输入落地机端口（port2）: " port2
         echo "
 [[endpoints]]
 listen = \"0.0.0.0:$port1\"
@@ -354,10 +353,10 @@ remote = \"$ip:$port2\"" >> /root/.realm/config.toml
 
 # 添加端口段转发
 add_port_range_forward() {
-    read -e -p "请输入落地鸡的IP: " ip
-    read -e -p "请输入本地中转鸡的起始端口: " start_port
-    read -e -p "请输入本地中转鸡的截止端口: " end_port
-    read -e -p "请输入落地鸡端口: " remote_port
+    read -e -p "请输入落地机的IP: " ip
+    read -e -p "请输入本地中转机的起始端口: " start_port
+    read -e -p "请输入本地中转机的截止端口: " end_port
+    read -e -p "请输入落地机端口: " remote_port
 
     for ((port=$start_port; port<=$end_port; port++)); do
         echo "
@@ -432,17 +431,16 @@ update_realm() {
 
 # 面板管理函数
 panel_management() {
-    clear
-    echo "==========================="
-    echo "Realm 面板管理"
-    echo "==========================="
+    echo "===================="
+    echo   "Realm 面板管理"
+    echo "===================="
     echo "1. 启动面板"
     echo "2. 暂停面板" 
     echo "3. 安装面板"
     echo "4. 卸载面板"
     echo "5. 修改面板配置"
     echo "0. 返回主菜单"
-    echo "==========================="
+    echo "===================="
     read -p "请选择操作 [0-5]: " panel_choice
 
     case $panel_choice in
@@ -450,7 +448,7 @@ panel_management() {
         2) stop_panel ;;
         3) install_panel ;;
         4) uninstall_panel ;;
-        5) modify_panel_config ;;
+        5) modify_panel_config_submenu ;; # 调用新的子菜单函数
         0) return ;;
         *) echo "无效的选择" ;;
     esac
@@ -481,7 +479,7 @@ install_panel() {
     echo "检测到系统架构: $arch，将下载: $panel_file"
     
     # 下载面板文件
-    download_url="https://github.com/wcwq98/realm/releases/download/v2.1/${panel_file}"
+    download_url="https://github.com/Polaris-DP/realm/releases/download/v1.0.0/${panel_file}"
     if ! wget -O "${panel_file}" "$download_url"; then
     echo "下载失败，请检查网络连接或稍后再试。"
     return 1
@@ -495,7 +493,8 @@ install_panel() {
     # 设置权限
     chmod +x realm_web
     
-
+    # 删除下载的zip文件
+    rm -f "/root/realm/${panel_file}"
 
     # 创建服务文件
     echo "[Unit]
@@ -548,11 +547,103 @@ uninstall_panel() {
     update_panel_status
 }
 
-# 修改面板配置
-modify_panel_config() {
-    echo "修改面板配置..."
-    # 在此添加修改配置的具体逻辑
-    echo "配置已修改。"
+# 新增：修改面板配置子菜单
+modify_panel_config_submenu() {
+    
+    while true; do
+        
+        echo "========================"
+        echo    "修改 Realm 面板配置"
+        echo "========================"
+        echo "1. 修改面板密码"
+        echo "2. 修改面板端口号"
+        echo "3. 配置HTTPS证书路径"
+        echo "0. 返回上一级菜单"
+        echo "========================"
+        read -p "请选择操作 [0-3]: " config_choice
+        case $config_choice in
+            1) modify_panel_password ;;
+            2) modify_panel_port ;;
+            3) add_panel_certificate_path ;;
+            0) return ;;
+            *) echo "无效的选择" ;;
+        esac
+        echo "" # 添加空行，提高可读性
+    done
+}
+# 新增：修改面板密码
+modify_panel_password() {
+    read -p "请输入新的面板密码: " new_password
+    if [ -z "$new_password" ]; then
+        echo "${red}密码不能为空。${plain}"
+        return 1
+    fi
+    # 使用sed命令替换 config.toml 中的密码
+    sed -i -E "s/^(password = \").*(\")/\1${new_password}\2/" "$PANEL_CONFIG_PATH"
+    if [ $? -eq 0 ]; then
+        echo "面板密码已成功修改为: ${new_password}"
+        restart_panel_prompt # 提示重启面板
+    else
+        echo "${red}修改密码失败，请检查配置文件格式。${plain}"
+    fi
+}
+# 新增：修改面板端口
+modify_panel_port() {
+    read -p "请输入新的面板端口号 (例如: 8888): " new_port
+    if ! [[ "$new_port" =~ ^[0-9]+$ ]] || [ "$new_port" -lt 1 ] || [ "$new_port" -gt 65535 ]; then
+        echo "${red}无效端口号，请输入1-65535之间的数字。${plain}"
+        return 1
+    fi
+    # 使用sed命令替换 config.toml 中的端口号
+    sed -i -E "s/^(port = ).*/\1${new_port}/" "$PANEL_CONFIG_PATH"
+    if [ $? -eq 0 ]; then
+        echo "面板端口已成功修改为: ${new_port}"
+        restart_panel_prompt # 提示重启面板
+    else
+        echo "${red}修改端口失败，请检查配置文件格式。${plain}"
+    fi
+}
+# 新增：添加证书路径
+add_panel_certificate_path() {
+    read -p "是否开启HTTPS (y/n)? " enable_https
+    enable_https_bool="false"
+    if [[ "$enable_https" =~ ^[Yy]$ ]]; then
+        enable_https_bool="true"
+        read -p "请输入证书文件 (.pem/.crt) 的完整路径: " cert_file_path
+        read -p "请输入私钥文件 (.key) 的完整路径: " key_file_path
+        if [ ! -f "$cert_file_path" ] || [ ! -f "$key_file_path" ]; then
+            echo "${red}错误: 证书文件或私钥文件路径不存在。请确认路径是否正确。${plain}"
+            return 1
+        fi
+        # 替换证书路径
+        sed -i -E "s|^(cert_file = \").*(\")|\1${cert_file_path}\2|" "$PANEL_CONFIG_PATH"
+        sed -i -E "s|^(key_file = \").*(\")|\1${key_file_path}\2|" "$PANEL_CONFIG_PATH"
+        echo "证书路径已更新。"
+    else
+        echo "HTTPS将保持关闭状态。"
+    fi
+    # 启用/禁用HTTPS
+    sed -i -E "s/^(enabled = ).*/\1${enable_https_bool}/" "$PANEL_CONFIG_PATH"
+    echo "面板HTTPS状态已设置为: ${enable_https_bool}"
+    restart_panel_prompt # 提示重启面板
+    if [ $? -eq 0 ]; then
+        echo "面板证书路径和HTTPS状态已更新。"
+    else
+        echo "${red}配置证书路径失败，请检查配置文件格式。${plain}"
+    fi
+}
+# 提示重启面板的辅助函数
+restart_panel_prompt() {
+    read -p "配置已修改，是否立即重启面板服务以应用更改 (Y/n)? " restart_choice
+    restart_choice=${restart_choice:-Y}
+    if [[ "$restart_choice" =~ ^[Yy]$ ]]; then
+        restart_service # 调用现有的重启realm服务函数，需要改成重启面板服务
+        # 修改为重启面板服务
+        systemctl restart realm-panel.service
+        echo "Realm 面板服务已重启。"
+    else
+        echo "请记住手动重启面板服务以应用更改: systemctl restart realm-panel"
+    fi
 }
 
 # 主程序
