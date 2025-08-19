@@ -1,6 +1,6 @@
-## 参考自https://www.nodeseek.com/post-183613-1 ，在此感谢大佬的教程
+## 0代码基础，纯闲的用AI修改自https://github.com/wcwq98/realm ，在此感谢大佬
 
-说明：在大佬的基础上添加了检测更新和重启服务等功能
+参考自https://www.nodeseek.com/post-183613-1 ，在此感谢大佬的教程
 
 ## 脚本界面预览：
 
@@ -28,15 +28,15 @@ realm 转发状态：启用
 ## 一键脚本：
 国内或v6 only可用（推荐）
 ```
-curl -L https://host.wxgwxha.eu.org/https://github.com/wcwq98/realm/releases/download/v2.1/realm.sh -o realm.sh && chmod +x realm.sh &&  ./realm.sh
+curl -L https://host.wxgwxha.eu.org/https://github.com/Polaris-DP/realm/releases/download/v1.0.0/realm.sh -o realm.sh && chmod +x realm.sh &&  ./realm.sh
 ```
 或
 ```
-curl -L https://github.com/wcwq98/realm/releases/download/v2.1/realm.sh -o realm.sh && chmod +x realm.sh &&  ./realm.sh
+curl -L https://github.com/Polaris-DP/realm/releases/download/v1.0.0/realm.sh -o realm.sh && chmod +x realm.sh &&  ./realm.sh
 ```
 或
 ```
-curl -L https://raw.githubusercontent.com/wcwq98/realm/refs/heads/main/realm.sh -o realm.sh && chmod +x realm.sh &&  ./realm.sh
+curl -L https://raw.githubusercontent.com/Polaris-DP/realm/refs/heads/main/realm.sh -o realm.sh && chmod +x realm.sh &&  ./realm.sh
 ```
 ## 默认配置文件（脚本在首次部署环境时会自动添加）
 ```
@@ -59,7 +59,7 @@ remote = "0.0.0.0:5678"
 password = "123456" # 面板密码
 
 [server]
-port = 8081 # 面板端口
+port = 18181 # 面板端口
 
 [https]
 enabled = false #是否开启HTTPS(强烈建议开启HTTPS)若certificate下没有证书不要开启此功能
