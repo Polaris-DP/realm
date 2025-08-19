@@ -28,13 +28,13 @@
             margin: 5px;
             border: none;
             border-radius: 5px;
-            background-color: #28a745;
+            background-color: #007bff;
             color: white;
             cursor: pointer;
             transition: background-color 0.3s;
         }
         button:hover {
-            background-color: #218838;
+            background-color: #0056b3;
         }
         .delete-btn {
             background-color: #dc3545;
@@ -110,11 +110,16 @@
             margin-bottom: 20px;
             flex-wrap: wrap;
         }
+        .logout-spacer {
+            flex-grow: 1;      /* 允许它尽可能地占据可用空间 */
+            margin-left: auto; /* ⬅️ 关键：将它和它后面的元素推到最右边 */
+            /* 实际上，只要有 flex-grow: 1;，margin-left: auto; 的效果就会自动产生 */
+        }
         #logoutButton {
-            background-color: #6c757d;
+            background-color: #ffc107;
         }
         #logoutButton:hover {
-            background-color: #5a6268;
+            background-color: #e0a800;
         }
         /* 分页区域 */
         .pagination {
@@ -140,9 +145,239 @@
         .page-size-select label {
             margin-right: 5px;
         }
+/* 定义基础颜色变量 */
+:root {
+    --body-bg: #f4f4f4;
+    --container-bg: #fff;
+    --text-color: #333;
+    --secondary-text-color: #666;
+
+    /* 主按钮颜色：从绿色改为蓝色 */
+    --button-bg-default: #007bff;          /* 蓝色 */
+    --button-hover-default: #0056b3;       /* 深蓝色 */
+
+    --button-bg-delete: #dc3545;
+    --button-hover-delete: #c82333;
+
+    /* 登出按钮颜色：从灰色系改为橙色系 */
+    --button-bg-logout: #ffc107;           /* 橙色 */
+    --button-hover-logout: #e0a800;        /* 亮橙色/深橙色 */
+
+    --table-header-bg: #f2f2f2;
+    --border-color: #ddd;
+    --output-bg: #f8f9fa;
+    --status-running-bg: #52c41a;
+    --status-stopped-bg: #ff4d4f;
+}
+
+/* 深色主题下的颜色变量（可微调） */
+body.dark-theme {
+    --body-bg: #222222; /* 深色背景 */
+    --container-bg: #333333; /* 深色容器 */
+    --text-color: #f0f0f0; /* 亮色文字 */
+    --secondary-text-color: #aaaaaa; /* 亮色次要文字 */
+
+    /* 深色模式下主按钮颜色：适配深色背景的蓝色 */
+    --button-bg-default: #007bff;          /* 偏亮的蓝色 */
+    --button-hover-default: #0056b3;       /* 适配深色背景的深蓝色 */
+
+    --button-bg-delete: #e74c3c; /* 深色模式下红色 */
+    --button-hover-delete: #c0392b;
+
+    /* 深色模式下登出按钮颜色：适配深色背景的橙色 */
+    --button-bg-logout: #fd7e14;           /* 偏亮的橙色 */
+    --button-hover-logout: #e66b00;        /* 适配深色背景的深橙色 */
+
+    --table-header-bg: #444444; /* 深色标题背景 */
+    --border-color: #555555; /* 深色边框 */
+    --output-bg: #3c3c3c; /* 深色输出框 */
+    --status-running-bg: #6bc72e; /* 状态标签也适应深色 */
+    --status-stopped-bg: #e6676b;
+}
+
+/* 将原有样式替换为CSS变量 */
+body {
+    background-color: var(--body-bg);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease; /* 添加过渡效果 */
+}
+
+h1 {
+    color: var(--text-color);
+}
+
+.container {
+    background-color: var(--container-bg);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+button {
+    background-color: var(--button-bg-default);
+    transition: background-color 0.3s ease;
+    /* 原有的 color: white; 可以保留，或改为 var(--text-color-dark-button); 如果需要区别 */
+    color: white; /* 假设按钮上的文字始终是白色，方便适配各种背景色 */
+    border: none; /* 通常按钮会有默认边框，这里显式移除 */
+    padding: 10px 20px; /* 默认内边距 */
+    border-radius: 5px; /* 默认圆角 */
+    cursor: pointer; /* 鼠标样式 */
+}
+
+button:hover {
+    background-color: var(--button-hover-default);
+}
+
+.delete-btn {
+    background-color: var(--button-bg-delete);
+}
+
+.delete-btn:hover {
+    background-color: var(--button-hover-delete);
+}
+
+#logoutButton {
+    background-color: var(--button-bg-logout);
+    margin-left: 10px;
+}
+
+#logoutButton:hover {
+    background-color: var(--button-hover-logout);
+}
+
+table {
+    border-collapse: collapse; /* 原有属性 */
+    border-spacing: 0; /* 确保没有额外间距 */
+    width: 100%; /* 确保表格宽度 */
+}
+
+th, td {
+    border: 1px solid var(--border-color); /* 应用边框变量 */
+    color: var(--text-color); /* 确保文字颜色适应主题 */
+    padding: 8px; /* 单元格内边距 */
+    text-align: left; /* 文本对齐 */
+    transition: border-color 0.3s ease, color 0.3s ease;
+}
+
+th {
+    background-color: var(--table-header-bg);
+    transition: background-color 0.3s ease;
+}
+
+.form-group label {
+    color: var(--secondary-text-color);
+    transition: color 0.3s ease;
+}
+
+.form-group input,
+.form-group textarea {
+    border: 1px solid var(--border-color);
+    background-color: var(--container-bg); /* 输入框背景也跟着容器走 */
+    color: var(--text-color); /* 输入框文字颜色 */
+    padding: 8px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+    width: 100%; /* 确保输入框宽度 */
+    box-sizing: border-box; /* 确保内边距和边框不会增加总宽度 */
+}
+
+#output {
+    background-color: var(--output-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    padding: 10px;
+    margin-top: 20px;
+    min-height: 100px; /* 最小高度 */
+    overflow-y: auto; /* 超出滚动 */
+    border-radius: 4px;
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+.status-tag { /* 如果之前没有这个通用类，可以加上 */
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    font-weight: bold;
+    color: white; /* 状态标签文字始终白色，通常效果比较好 */
+    text-align: center;
+}
+
+.status-tag.running {
+    background-color: var(--status-running-bg);
+    transition: background-color 0.3s ease;
+}
+
+.status-tag.stopped {
+    background-color: var(--status-stopped-bg);
+    transition: background-color 0.3s ease;
+}
+
+/* Pagination / Selectors */
+.status-label,
+.page-info,
+.page-size-select label {
+    color: var(--secondary-text-color);
+    transition: color 0.3s ease;
+}
+
+.page-size-select select {
+    background-color: var(--container-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    padding: 5px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+/* 新增：主题切换按钮的固定定位和图标样式 */
+#themeToggleButton {
+    position: fixed; /* 关键：相对于浏览器窗口定位 */
+    top: 20px;       /* 距离顶部 20px */
+    right: 20px;      /* 距离右侧 20px */
+    z-index: 999;    /* 确保它在最上层 */
+    
+    width: 44px;     /* 设置宽度 */
+    height: 44px;    /* 设置高度 */
+    border-radius: 50%; /* 关键：变成圆形 */
+    
+    /* 中间对齐图标 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    padding: 0; /* 移除按钮默认的内边距 */
+    
+    /* 从CSS变量获取颜色，实现主题自适应 */
+    background-color: var(--container-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    
+    /* 其他样式 */
+    font-size: 24px; /* 调整图标（Emoji）的大小 */
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); /* 添加一点阴影使其更立体 */
+    transition: all 0.3s ease; /* 让所有变化都带上过渡效果 */
+}
+
+#themeToggleButton:hover {
+    transform: scale(1.1); /* 鼠标悬浮时放大一点 */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+#themeToggleButton svg {
+    width: 24px;   /* 控制图标大小 */
+    height: 24px;  /* 控制图标大小 */
+    stroke: currentColor; /* 关键：让图标线条颜色跟随按钮的文字颜色变化 */
+}
+#themeIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
     </style>
 </head>
 <body>
+    <!-- 新增主题切换按钮 -->
+    <button id="themeToggleButton" title="切换主题"><span id="themeIcon"></span></button>
     <div class="container">
         <h1>Realm 转发管理面板</h1>
 
@@ -150,11 +385,12 @@
             <button id="startButton">启动服务</button>
             <button id="stopButton">停止服务</button>
             <button id="restartButton">重启服务</button>
-            <button id="logoutButton">登出</button>
             <div class="status-wrapper">
                 <span class="status-label">状态:</span>
                 <span id="serviceStatus" class="status-tag">检查中...</span>
             </div>
+             <div class="logout-spacer"></div> 
+            <button id="logoutButton">登出</button>
         </div>
 
         <div id="output"></div>
